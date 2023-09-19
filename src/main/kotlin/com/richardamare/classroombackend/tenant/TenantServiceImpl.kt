@@ -1,7 +1,10 @@
 package com.richardamare.classroombackend.tenant
 
 import com.richardamare.classroombackend.identity.UserRepository
+import com.richardamare.classroombackend.tenant.dto.TenantDTO
 import com.richardamare.classroombackend.tenant.params.TenantCreateParams
+import com.richardamare.classroombackend.tenant.params.TenantListParams
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -37,5 +40,18 @@ class TenantServiceImpl(
         // send event to billing service to create Stripe customer
 
         return tenant.id.toHexString()
+    }
+
+    override fun listTenants(params: TenantListParams): List<TenantDTO> {
+        val ownerId = ObjectId(params.ownerId)
+        val tenants = tenantRepository.findAllByOwnerId(ownerId)
+
+        return tenants.map {
+            TenantDTO(
+                id = it.id.toHexString(),
+                name = it.name,
+                slug = it.slug,
+            )
+        }
     }
 }

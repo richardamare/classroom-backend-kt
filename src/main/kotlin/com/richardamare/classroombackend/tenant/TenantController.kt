@@ -1,13 +1,11 @@
 package com.richardamare.classroombackend.tenant
 
 import com.richardamare.classroombackend.tenant.params.TenantCreateParams
+import com.richardamare.classroombackend.tenant.params.TenantListParams
 import com.richardamare.classroombackend.tenant.requests.TenantCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
 @RestController
@@ -29,5 +27,18 @@ class TenantController(
         )
 
         return ResponseEntity.ok(mapOf("id" to tenantId))
+    }
+
+    @GetMapping
+    fun listTenants(
+        principal: Principal,
+    ): ResponseEntity<*> {
+        val tenants = tenantService.listTenants(
+            TenantListParams(
+                ownerId = principal.name,
+            )
+        )
+
+        return ResponseEntity.ok(tenants)
     }
 }
