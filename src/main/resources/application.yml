@@ -1,0 +1,13 @@
+application:
+  config:
+    jwt:
+      secret: ${JWT_SECRET:secret}
+
+server:
+  port: ${PORT:8080}
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/classroom}
+      database: classroom
