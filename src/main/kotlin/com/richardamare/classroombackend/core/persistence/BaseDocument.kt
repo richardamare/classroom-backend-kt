@@ -1,4 +1,4 @@
-package com.richardamare.classroombackend.core
+package com.richardamare.classroombackend.core.persistence
 
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id

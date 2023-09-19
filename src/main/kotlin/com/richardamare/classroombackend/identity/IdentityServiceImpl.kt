@@ -14,7 +14,6 @@ class IdentityServiceImpl(
     private val logger = LoggerFactory.getLogger(IdentityServiceImpl::class.java)
 
     override fun createUser(params: UserCreateParams): String {
-
         val hashedPassword = try {
             passwordEncoder.encode(params.password)
         } catch (e: Exception) {
