@@ -10,7 +10,7 @@ class AuthUser(
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf(
-            SimpleGrantedAuthority("ROLE_${user.role}")
+            SimpleGrantedAuthority("ROLE_${user.role.name.uppercase()}")
         )
     }
 

@@ -1,5 +1,6 @@
 package com.richardamare.classroombackend.auth
 
+import com.richardamare.classroombackend.core.exception.UnauthorizedException
 import com.richardamare.classroombackend.identity.UserRepository
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
@@ -12,21 +13,15 @@ class AuthServiceImpl(
     override fun authorize(token: String): UsernamePasswordAuthenticationToken? {
         val username = jwtUtil.extractUsername(token) ?: return null
 
-        val user = userRepository.findById(username).orElseThrow {
-            Exception("User not found")
-        }
+        val user = userRepository.findById(username)
+            .orElseThrow { UnauthorizedException() }
 
-        return UsernamePasswordAuthenticationToken(
-            user.id,
-            null,
-            listOf(org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_${user.role.name.lowercase()}")),
-        )
+        return UsernamePasswordAuthenticationToken(user.id, null, AuthUser(user).authorities)
     }
 
     override fun findUserById(id: String): AuthUser {
-        val user = userRepository.findById(id).orElseThrow {
-            Exception("User not found")
-        }
+        val user = userRepository.findById(id)
+            .orElseThrow { UnauthorizedException() }
 
         return AuthUser(user)
     }
