@@ -1,0 +1,9 @@
+### Create a tenant
+POST http://localhost:8080/api/v1/tenants
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiI2NTA5ZjI0YzBiNDU1YjZmNWIyZTM2NWMiLCJpYXQiOjE2OTUxNTI3MDEsImV4cCI6MTY5NTE1NDE0MX0.Nand4ycw98-J2ApYjhIj6Ct6DmDh70s7rbNtGdBSdSc
+
+{
+  "name": "tenant1",
+  "slug": "tenant1"
+}
