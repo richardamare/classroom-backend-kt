@@ -6,8 +6,4 @@ enum class UserRole {
     STUDENT,
     OFFICE,
     PARENT;
-
-    override fun toString(): String {
-        return name.lowercase()
-    }
 }
