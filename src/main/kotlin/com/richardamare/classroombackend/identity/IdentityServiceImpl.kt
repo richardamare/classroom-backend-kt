@@ -75,15 +75,16 @@ class IdentityServiceImpl(
         if (!passwordEncoder.matches(params.password, user.password))
             throw UnauthorizedException("Invalid credentials")
 
+        val claims = mutableMapOf<String, Any>(
+            "role" to user.role.name.lowercase(),
+        )
 
-        val token = when {
-            user.tenantId != null -> jwtUtil.generateToken(
-                userDetails = AuthUser(user),
-                extraClaims = mapOf("tenantId" to user.tenantId!!),
-            )
+        if (user.tenantId != null) claims["tenantId"] = user.tenantId!!
 
-            else -> jwtUtil.generateToken(userDetails = AuthUser(user))
-        }
+        val token = jwtUtil.generateToken(
+            userDetails = AuthUser(user),
+            extraClaims = claims,
+        )
 
         if (token == null) {
             logger.error("Error generating token")
