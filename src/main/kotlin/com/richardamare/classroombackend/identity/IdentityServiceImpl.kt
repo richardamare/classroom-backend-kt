@@ -18,8 +18,21 @@ class IdentityServiceImpl(
             passwordEncoder.encode(params.password)
         } catch (e: Exception) {
             logger.error("Error hashing password", e)
-            throw e
+            throw IllegalStateException()
         }
+
+        val existingUsers = try {
+            userRepository.findAllByEmailAndRoleAndTenantId(
+                email = params.email,
+                role = params.role,
+                tenantId = params.tenantId,
+            )
+        } catch (e: Exception) {
+            logger.error("Error finding user", e)
+            throw IllegalStateException()
+        }
+
+        if (existingUsers.isNotEmpty()) throw IllegalArgumentException("User already exists")
 
         return try {
             val user = userRepository.save(
@@ -36,7 +49,7 @@ class IdentityServiceImpl(
             user.id.toHexString()
         } catch (e: Exception) {
             logger.error("Error creating user", e)
-            throw e
+            throw IllegalStateException()
         }
     }
 }
