@@ -1,17 +1,20 @@
 package com.richardamare.classroombackend.tenant
 
+import com.richardamare.classroombackend.core.event.Event
 import com.richardamare.classroombackend.identity.UserRepository
 import com.richardamare.classroombackend.tenant.dto.TenantDTO
 import com.richardamare.classroombackend.tenant.params.TenantCreateParams
 import com.richardamare.classroombackend.tenant.params.TenantListParams
 import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
 @Service
 class TenantServiceImpl(
     private val tenantRepository: TenantRepository,
     private val userRepository: UserRepository,
+    private val publisher: ApplicationEventPublisher,
 ) : TenantService {
 
     private val logger = LoggerFactory.getLogger(TenantServiceImpl::class.java)
@@ -38,6 +41,12 @@ class TenantServiceImpl(
         )
 
         // send event to billing service to create Stripe customer
+
+        publisher.publishEvent(
+            Event.TenantCreated(
+                id = tenant.id.toHexString()
+            )
+        )
 
         return tenant.id.toHexString()
     }
