@@ -15,4 +15,7 @@ abstract class BaseDocument(
     fun onUpdate() {
         updatedAt = LocalDateTime.now()
     }
+
+    val _id: String
+        get() = id.toHexString()
 }

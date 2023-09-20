@@ -17,3 +17,14 @@ Content-Type: application/json
   "email": "johndoe@example.com",
   "password": "password"
 }
+
+### Create an office user
+POST http://tenant1.localhost:8080/api/v1/identity/register/office
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiI2NTA5ZjI0YzBiNDU1YjZmNWIyZTM2NWMiLCJpYXQiOjE2OTUxOTQ1MjAsImV4cCI6MTY5NTE5NTk2MH0.dTwEwwavfB3hzNnxc1-Kps7DQk6poy3yGjfq7ozbqbk
+
+{
+  "email": "johndoe@example.com",
+  "firstName": "John",
+  "lastName": "Doe"
+}

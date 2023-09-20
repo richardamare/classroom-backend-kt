@@ -1,9 +1,12 @@
 package com.richardamare.classroombackend.identity
 
+import com.richardamare.classroombackend.core.annotation.TenantId
 import com.richardamare.classroombackend.identity.params.LoginParams
-import com.richardamare.classroombackend.identity.params.UserCreateParams
+import com.richardamare.classroombackend.identity.params.UserAdminCreateParams
+import com.richardamare.classroombackend.identity.params.UserOfficeCreateParams
 import com.richardamare.classroombackend.identity.requests.LoginRequest
 import com.richardamare.classroombackend.identity.requests.RegisterAdminRequest
+import com.richardamare.classroombackend.identity.requests.UserOfficeCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,14 +24,12 @@ class IdentityController(
     fun registerAdmin(
         @RequestBody @Valid body: RegisterAdminRequest,
     ): ResponseEntity<*> {
-        identityService.createUser(
-            UserCreateParams(
+        identityService.createAdminUser(
+            UserAdminCreateParams(
                 firstName = body.firstName,
                 lastName = body.lastName,
                 email = body.email,
                 password = body.password,
-                tenantId = null,
-                role = UserRole.ADMIN,
             )
         )
 
@@ -49,6 +50,24 @@ class IdentityController(
         )
 
         return ResponseEntity.ok(res)
+    }
+
+    @PostMapping("/register/office")
+    fun registerOffice(
+        @RequestBody @Valid body: UserOfficeCreateRequest,
+        @TenantId tenantId: String,
+    ): ResponseEntity<*> {
+
+        identityService.createOfficeUser(
+            UserOfficeCreateParams(
+                firstName = body.firstName,
+                lastName = body.lastName,
+                email = body.email,
+                tenantId = tenantId,
+            )
+        )
+
+        return ResponseEntity.ok(mapOf("message" to "ok"))
     }
 
 }

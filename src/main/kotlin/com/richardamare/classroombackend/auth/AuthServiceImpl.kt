@@ -2,6 +2,7 @@ package com.richardamare.classroombackend.auth
 
 import com.richardamare.classroombackend.core.exception.UnauthorizedException
 import com.richardamare.classroombackend.identity.UserRepository
+import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
 
@@ -11,7 +12,13 @@ class AuthServiceImpl(
     private val jwtUtil: JwtUtil,
 ) : AuthService {
     override fun authorize(token: String): UsernamePasswordAuthenticationToken? {
-        val username = jwtUtil.extractUsername(token) ?: return null
+        val username = try {
+            jwtUtil.extractUsername(token)
+        } catch (e: ExpiredJwtException) {
+            return null
+        }
+
+        username ?: return null
 
         val user = userRepository.findById(username)
             .orElseThrow { UnauthorizedException() }
