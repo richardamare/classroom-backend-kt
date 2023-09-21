@@ -11,3 +11,14 @@ spring:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/classroom}
       database: classroom
+  mail:
+    host: ${MAIL_HOST}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
