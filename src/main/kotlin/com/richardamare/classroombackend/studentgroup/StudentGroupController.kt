@@ -1,14 +1,13 @@
 package com.richardamare.classroombackend.studentgroup
 
 import com.richardamare.classroombackend.core.annotation.TenantId
+import com.richardamare.classroombackend.studentgroup.params.StudentGroupAddStudentParams
 import com.richardamare.classroombackend.studentgroup.params.StudentGroupCreateParams
+import com.richardamare.classroombackend.studentgroup.params.StudentGroupRemoveStudentParams
 import com.richardamare.classroombackend.studentgroup.request.StudentGroupCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/student-groups")
@@ -30,5 +29,41 @@ class StudentGroupController(
         )
 
         return ResponseEntity.ok(res)
+    }
+
+    @PostMapping("/{id}/students/{studentId}")
+    fun addStudentToGroup(
+        @PathVariable("id") id: String,
+        @PathVariable("studentId") studentId: String,
+        @TenantId tenantId: String,
+    ): ResponseEntity<Unit> {
+
+        studentGroupService.addStudentToGroup(
+            StudentGroupAddStudentParams(
+                studentGroupId = id,
+                studentId = studentId,
+                tenantId = tenantId,
+            )
+        )
+
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/{id}/students/{studentId}")
+    fun removeStudentFromGroup(
+        @PathVariable("id") id: String,
+        @PathVariable("studentId") studentId: String,
+        @TenantId tenantId: String,
+    ): ResponseEntity<Unit> {
+
+        studentGroupService.removeStudentFromGroup(
+            StudentGroupRemoveStudentParams(
+                studentGroupId = id,
+                studentId = studentId,
+                tenantId = tenantId,
+            )
+        )
+
+        return ResponseEntity.ok().build()
     }
 }

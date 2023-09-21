@@ -10,4 +10,5 @@ class StudentGroup(
     var tenantId: ObjectId,
     var semesterId: ObjectId,
     var type: StudentGroupType,
+    var studentIds: List<ObjectId>,
 ) : BaseDocument()
