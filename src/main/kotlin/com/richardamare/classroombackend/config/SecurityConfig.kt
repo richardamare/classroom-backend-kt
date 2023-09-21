@@ -42,7 +42,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(
-                        "/api/v1/identity/login/admin",
+                        "/api/v1/identity/login/**",
                         "/api/v1/identity/register/admin"
                     ).permitAll()
                     .anyRequest().authenticated()

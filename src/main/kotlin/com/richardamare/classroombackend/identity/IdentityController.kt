@@ -8,11 +8,9 @@ import com.richardamare.classroombackend.identity.requests.LoginRequest
 import com.richardamare.classroombackend.identity.requests.RegisterAdminRequest
 import com.richardamare.classroombackend.identity.requests.UserOfficeCreateRequest
 import jakarta.validation.Valid
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/identity")
@@ -68,6 +66,33 @@ class IdentityController(
         )
 
         return ResponseEntity.ok(mapOf("message" to "ok"))
+    }
+
+    @PostMapping("/login/{role}")
+    fun loginByRoleAndTenant(
+        @RequestBody @Valid body: LoginRequest,
+        @TenantId tenantId: String,
+        @PathVariable("role") roleParam: String,
+    ): ResponseEntity<*> {
+
+        val role = when (roleParam) {
+            "office" -> UserRole.OFFICE
+            "student" -> UserRole.STUDENT
+            "teacher" -> UserRole.TEACHER
+            "parent" -> UserRole.PARENT
+            else -> throw NotFoundException()
+        }
+
+        val res = identityService.login(
+            LoginParams(
+                email = body.email,
+                password = body.password,
+                tenantId = tenantId,
+                role = role,
+            )
+        )
+
+        return ResponseEntity.ok(res)
     }
 
 }

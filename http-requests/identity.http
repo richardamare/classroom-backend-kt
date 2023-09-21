@@ -21,10 +21,19 @@ Content-Type: application/json
 ### Create an office user
 POST http://tenant1.localhost:8080/api/v1/identity/register/office
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiI2NTA5ZjI0YzBiNDU1YjZmNWIyZTM2NWMiLCJpYXQiOjE2OTUxOTQ1MjAsImV4cCI6MTY5NTE5NTk2MH0.dTwEwwavfB3hzNnxc1-Kps7DQk6poy3yGjfq7ozbqbk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiI2NTA5ZjI0YzBiNDU1YjZmNWIyZTM2NWMiLCJpYXQiOjE2OTUyODkzMDAsImV4cCI6MTY5NTI5MDc0MH0.816H_lD-ZuFuxWZ_rWomF9zAtDvgGD-2CjokBm-Qxi8
 
 {
   "email": "johndoe@example.com",
   "firstName": "John",
   "lastName": "Doe"
+}
+
+### Login as an office user
+POST http://tenant1.localhost:8080/api/v1/identity/login/office
+Content-Type: application/json
+
+{
+  "email": "johndoe@example.com",
+  "password": "qjo6sFzkAD"
 }

@@ -74,6 +74,8 @@ class IdentityServiceImpl(
     override fun createOfficeUser(params: UserOfficeCreateParams): String {
         val password = generateRandomPassword()
 
+        this.logger.info("Generated password: $password for user ${params.email}")
+
         val tenant = tenantRepository.findById(params.tenantId)
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
@@ -87,7 +89,7 @@ class IdentityServiceImpl(
         val existingUsers = userRepository.findAllByEmailAndRoleAndTenantId(
             email = params.email,
             role = UserRole.OFFICE,
-            tenantId = tenant._id,
+            tenantId = tenant.id,
         )
 
         if (existingUsers.isNotEmpty()) throw IllegalArgumentException("User already exists")
@@ -114,10 +116,16 @@ class IdentityServiceImpl(
     }
 
     override fun login(params: LoginParams): LoginResult {
+
+        val tenant = if (params.tenantId != null) {
+            tenantRepository.findById(params.tenantId)
+                .orElseThrow { ResourceNotFoundException("Tenant not found") }
+        } else null
+
         val user = userRepository.findByEmailAndRoleAndTenantId(
             email = params.email,
             role = params.role,
-            tenantId = params.tenantId,
+            tenantId = tenant?.id,
         ).orElseThrow {
             ResourceNotFoundException("No account found with this email")
         }
