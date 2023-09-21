@@ -51,8 +51,7 @@ class IdentityController(
         @RequestBody @Valid body: UserOfficeCreateRequest,
         @TenantId tenantId: String,
     ): ResponseEntity<*> {
-
-        identityService.createOfficeUser(
+        val res = identityService.createOfficeUser(
             UserOfficeCreateParams(
                 firstName = body.firstName,
                 lastName = body.lastName,
@@ -61,7 +60,7 @@ class IdentityController(
             )
         )
 
-        return ResponseEntity.ok(mapOf("message" to "ok"))
+        return ResponseEntity.ok(res)
     }
 
     @PostMapping("/login/{role}")
@@ -96,7 +95,7 @@ class IdentityController(
         @RequestBody @Valid body: UserTeacherCreateRequest,
         @TenantId tenantId: String,
     ): ResponseEntity<*> {
-        identityService.createTeacherUser(
+        val res = identityService.createTeacherUser(
             UserTeacherCreateParams(
                 firstName = body.firstName,
                 lastName = body.lastName,
@@ -105,7 +104,7 @@ class IdentityController(
             )
         )
 
-        return ResponseEntity.ok(mapOf("message" to "ok"))
+        return ResponseEntity.ok(res)
     }
 
     @PostMapping("/register/student")
@@ -113,7 +112,7 @@ class IdentityController(
         @RequestBody @Valid body: UserStudentCreateRequest,
         @TenantId tenantId: String,
     ): ResponseEntity<*> {
-        identityService.createStudentUser(
+        val res = identityService.createStudentUser(
             UserStudentCreateParams(
                 firstName = body.firstName,
                 lastName = body.lastName,
@@ -122,7 +121,7 @@ class IdentityController(
             )
         )
 
-        return ResponseEntity.ok(mapOf("message" to "ok"))
+        return ResponseEntity.ok(res)
     }
 
     @PostMapping("/register/parent")
@@ -130,7 +129,7 @@ class IdentityController(
         @RequestBody @Valid body: UserParentCreateRequest,
         @TenantId tenantId: String,
     ): ResponseEntity<*> {
-        identityService.createParentUser(
+        val res = identityService.createParentUser(
             UserParentCreateParams(
                 firstName = body.firstName,
                 lastName = body.lastName,
@@ -140,6 +139,6 @@ class IdentityController(
             )
         )
 
-        return ResponseEntity.ok(mapOf("message" to "ok"))
+        return ResponseEntity.ok(res)
     }
 }

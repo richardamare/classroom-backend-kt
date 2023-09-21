@@ -6,6 +6,7 @@ import com.richardamare.classroombackend.core.exception.ResourceNotFoundExceptio
 import com.richardamare.classroombackend.core.exception.UnauthorizedException
 import com.richardamare.classroombackend.identity.params.*
 import com.richardamare.classroombackend.identity.result.LoginResult
+import com.richardamare.classroombackend.identity.result.RegisterResult
 import com.richardamare.classroombackend.tenant.TenantRepository
 import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
@@ -30,7 +31,7 @@ class IdentityServiceImpl(
             .joinToString("")
     }
 
-    override fun createAdminUser(params: UserAdminCreateParams): String {
+    override fun createAdminUser(params: UserAdminCreateParams): RegisterResult {
         val hashedPassword = try {
             passwordEncoder.encode(params.password)
         } catch (e: Exception) {
@@ -63,14 +64,16 @@ class IdentityServiceImpl(
                 )
             )
 
-            user.id.toHexString()
+            RegisterResult(
+                id = user.id.toHexString(),
+            )
         } catch (e: Exception) {
             logger.error("Error creating user", e)
             throw IllegalStateException()
         }
     }
 
-    override fun createOfficeUser(params: UserOfficeCreateParams): String {
+    override fun createOfficeUser(params: UserOfficeCreateParams): RegisterResult {
         val password = generateRandomPassword()
 
         val tenant = tenantRepository.findById(params.tenantId)
@@ -105,7 +108,9 @@ class IdentityServiceImpl(
 
             // TODO: send tenant.user.created event to send email to user with password
 
-            user.id.toHexString()
+            RegisterResult(
+                id = user.id.toHexString(),
+            )
         } catch (e: Exception) {
             logger.error("Error creating user", e)
             throw IllegalStateException()
@@ -154,7 +159,7 @@ class IdentityServiceImpl(
         )
     }
 
-    override fun createTeacherUser(params: UserTeacherCreateParams): String {
+    override fun createTeacherUser(params: UserTeacherCreateParams): RegisterResult {
         val tenant = tenantRepository.findById(params.tenantId)
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
@@ -189,14 +194,16 @@ class IdentityServiceImpl(
 
             // TODO: send tenant.user.created event to send email to user with password
 
-            user.id.toHexString()
+            RegisterResult(
+                id = user.id.toHexString(),
+            )
         } catch (e: Exception) {
             logger.error("Error creating user", e)
             throw IllegalStateException()
         }
     }
 
-    override fun createStudentUser(params: UserStudentCreateParams): String {
+    override fun createStudentUser(params: UserStudentCreateParams): RegisterResult {
         val tenant = tenantRepository.findById(params.tenantId)
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
@@ -231,14 +238,16 @@ class IdentityServiceImpl(
 
             // TODO: send tenant.user.created event to send email to user with password
 
-            user.id.toHexString()
+            RegisterResult(
+                id = user.id.toHexString(),
+            )
         } catch (e: Exception) {
             logger.error("Error creating user", e)
             throw IllegalStateException()
         }
     }
 
-    override fun createParentUser(params: UserParentCreateParams): String {
+    override fun createParentUser(params: UserParentCreateParams): RegisterResult {
         val tenant = tenantRepository.findById(params.tenantId)
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
@@ -284,7 +293,9 @@ class IdentityServiceImpl(
 
             // TODO: send tenant.user.created event to send email to user with password
 
-            user.id.toHexString()
+            RegisterResult(
+                id = user.id.toHexString(),
+            )
         } catch (e: Exception) {
             logger.error("Error creating user", e)
             throw IllegalStateException()

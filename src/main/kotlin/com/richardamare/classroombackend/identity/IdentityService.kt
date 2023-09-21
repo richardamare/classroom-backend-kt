@@ -2,12 +2,13 @@ package com.richardamare.classroombackend.identity
 
 import com.richardamare.classroombackend.identity.params.*
 import com.richardamare.classroombackend.identity.result.LoginResult
+import com.richardamare.classroombackend.identity.result.RegisterResult
 
 interface IdentityService {
-    fun createAdminUser(params: UserAdminCreateParams): String
-    fun createOfficeUser(params: UserOfficeCreateParams): String
     fun login(params: LoginParams): LoginResult
-    fun createTeacherUser(params: UserTeacherCreateParams): String
-    fun createStudentUser(params: UserStudentCreateParams): String
-    fun createParentUser(params: UserParentCreateParams): String
+    fun createAdminUser(params: UserAdminCreateParams): RegisterResult
+    fun createOfficeUser(params: UserOfficeCreateParams): RegisterResult
+    fun createTeacherUser(params: UserTeacherCreateParams): RegisterResult
+    fun createStudentUser(params: UserStudentCreateParams): RegisterResult
+    fun createParentUser(params: UserParentCreateParams): RegisterResult
 }
