@@ -9,4 +9,5 @@ interface IdentityService {
     fun login(params: LoginParams): LoginResult
     fun createTeacherUser(params: UserTeacherCreateParams): String
     fun createStudentUser(params: UserStudentCreateParams): String
+    fun createParentUser(params: UserParentCreateParams): String
 }

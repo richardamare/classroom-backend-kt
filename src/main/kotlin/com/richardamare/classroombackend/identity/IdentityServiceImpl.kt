@@ -7,6 +7,7 @@ import com.richardamare.classroombackend.core.exception.UnauthorizedException
 import com.richardamare.classroombackend.identity.params.*
 import com.richardamare.classroombackend.identity.result.LoginResult
 import com.richardamare.classroombackend.tenant.TenantRepository
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -225,6 +226,59 @@ class IdentityServiceImpl(
                     password = hashedPassword,
                     tenantId = tenant.id,
                     role = UserRole.STUDENT,
+                )
+            )
+
+            // TODO: send tenant.user.created event to send email to user with password
+
+            user.id.toHexString()
+        } catch (e: Exception) {
+            logger.error("Error creating user", e)
+            throw IllegalStateException()
+        }
+    }
+
+    override fun createParentUser(params: UserParentCreateParams): String {
+        val tenant = tenantRepository.findById(params.tenantId)
+            .orElseThrow { ResourceNotFoundException("Tenant not found") }
+
+        val existingUsers = userRepository.findAllByEmailAndRoleAndTenantId(
+            email = params.email,
+            role = UserRole.PARENT,
+            tenantId = tenant.id,
+        )
+
+        if (existingUsers.isNotEmpty()) throw IllegalArgumentException("User already exists")
+
+        val password = generateRandomPassword()
+
+        val hashedPassword = try {
+            passwordEncoder.encode(password)
+        } catch (e: Exception) {
+            logger.error("Error hashing password", e)
+            throw IllegalStateException()
+        }
+
+        val student = try {
+            userRepository.findByIdAndTenantId(ObjectId(params.studentId), tenant.id)
+                ?: throw IllegalArgumentException("Student not found")
+        } catch (e: Exception) {
+            logger.error("Error finding student", e)
+            throw IllegalStateException()
+        }
+
+        if (student.role != UserRole.STUDENT) throw IllegalArgumentException("User is not a student")
+
+        return try {
+            val user = userRepository.save(
+                User(
+                    firstName = params.firstName,
+                    lastName = params.lastName,
+                    email = params.email,
+                    password = hashedPassword,
+                    tenantId = tenant.id,
+                    role = UserRole.PARENT,
+                    studentId = student.id,
                 )
             )
 

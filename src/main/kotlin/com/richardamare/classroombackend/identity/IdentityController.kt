@@ -125,4 +125,21 @@ class IdentityController(
         return ResponseEntity.ok(mapOf("message" to "ok"))
     }
 
+    @PostMapping("/register/parent")
+    fun registerParent(
+        @RequestBody @Valid body: UserParentCreateRequest,
+        @TenantId tenantId: String,
+    ): ResponseEntity<*> {
+        identityService.createParentUser(
+            UserParentCreateParams(
+                firstName = body.firstName,
+                lastName = body.lastName,
+                tenantId = tenantId,
+                email = body.email,
+                studentId = body.studentId,
+            )
+        )
+
+        return ResponseEntity.ok(mapOf("message" to "ok"))
+    }
 }

@@ -9,4 +9,5 @@ import java.util.*
 interface UserRepository : MongoRepository<User, String> {
     fun findAllByEmailAndRoleAndTenantId(email: String, role: UserRole, tenantId: ObjectId?): List<User>
     fun findByEmailAndRoleAndTenantId(email: String, role: UserRole, tenantId: ObjectId?): Optional<User>
+    fun findByIdAndTenantId(id: ObjectId, tenantId: ObjectId?): User?
 }
