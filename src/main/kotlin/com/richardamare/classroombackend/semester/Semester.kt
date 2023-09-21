@@ -11,10 +11,4 @@ class Semester(
     var startDate: LocalDateTime,
     var endDate: LocalDateTime,
     var tenantId: ObjectId,
-) : BaseDocument() {
-    companion object {
-        fun formatName(name: String): String {
-            return name.lowercase().replace(" ", "-")
-        }
-    }
-}
+) : BaseDocument()
