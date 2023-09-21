@@ -1,14 +1,8 @@
 package com.richardamare.classroombackend.identity
 
 import com.richardamare.classroombackend.core.annotation.TenantId
-import com.richardamare.classroombackend.identity.params.LoginParams
-import com.richardamare.classroombackend.identity.params.UserAdminCreateParams
-import com.richardamare.classroombackend.identity.params.UserOfficeCreateParams
-import com.richardamare.classroombackend.identity.params.UserTeacherCreateParams
-import com.richardamare.classroombackend.identity.requests.LoginRequest
-import com.richardamare.classroombackend.identity.requests.RegisterAdminRequest
-import com.richardamare.classroombackend.identity.requests.UserOfficeCreateRequest
-import com.richardamare.classroombackend.identity.requests.UserTeacherCreateRequest
+import com.richardamare.classroombackend.identity.params.*
+import com.richardamare.classroombackend.identity.requests.*
 import jakarta.validation.Valid
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.ResponseEntity
@@ -104,6 +98,23 @@ class IdentityController(
     ): ResponseEntity<*> {
         identityService.createTeacherUser(
             UserTeacherCreateParams(
+                firstName = body.firstName,
+                lastName = body.lastName,
+                tenantId = tenantId,
+                email = body.email,
+            )
+        )
+
+        return ResponseEntity.ok(mapOf("message" to "ok"))
+    }
+
+    @PostMapping("/register/student")
+    fun registerStudent(
+        @RequestBody @Valid body: UserStudentCreateRequest,
+        @TenantId tenantId: String,
+    ): ResponseEntity<*> {
+        identityService.createStudentUser(
+            UserStudentCreateParams(
                 firstName = body.firstName,
                 lastName = body.lastName,
                 tenantId = tenantId,
