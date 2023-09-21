@@ -7,4 +7,6 @@ data class StudentGroupCreateRequest(
     val name: String,
     @field:NotBlank(message = "Semester ID is required")
     val semesterId: String,
+    @field:NotBlank(message = "Type is required")
+    val type: String,
 )

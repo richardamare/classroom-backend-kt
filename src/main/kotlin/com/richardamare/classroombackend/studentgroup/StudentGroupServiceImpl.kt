@@ -29,6 +29,7 @@ class StudentGroupServiceImpl(
                     name = params.name,
                     tenantId = tenant.id,
                     semesterId = semester.id,
+                    type = params.type,
                 )
             )
 

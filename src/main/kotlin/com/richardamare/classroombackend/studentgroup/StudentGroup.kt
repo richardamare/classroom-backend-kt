@@ -9,4 +9,5 @@ class StudentGroup(
     var name: String,
     var tenantId: ObjectId,
     var semesterId: ObjectId,
+    var type: StudentGroupType,
 ) : BaseDocument()
