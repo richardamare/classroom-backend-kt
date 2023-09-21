@@ -64,6 +64,9 @@ class StudentGroupServiceImpl(
         if (student.tenantId != tenant.id)
             throw IllegalArgumentException("Student not found")
 
+        if (group.studentIds.contains(student.id))
+            throw IllegalArgumentException("Student already in group")
+
         group.studentIds += student.id
 
         try {
@@ -89,6 +92,9 @@ class StudentGroupServiceImpl(
 
         if (student.tenantId != tenant.id)
             throw IllegalArgumentException("Student not found")
+
+        if (student.id !in group.studentIds)
+            throw IllegalArgumentException("Student not found in group")
 
         group.studentIds -= student.id
 
