@@ -13,4 +13,5 @@ class User(
     var tenantId: ObjectId?,
     var role: UserRole,
     var isVerified: Boolean = false,
+    var studentId: ObjectId? = null, // for PARENT only
 ) : BaseDocument()

@@ -37,3 +37,14 @@ Content-Type: application/json
   "email": "johndoe@example.com",
   "password": "qjo6sFzkAD"
 }
+
+### Create a teacher user
+POST http://tenant1.localhost:8080/api/v1/identity/register/teacher
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoib2ZmaWNlIiwidGVuYW50SWQiOnsidGltZXN0YW1wIjoxNjk1MTUzNjg0LCJkYXRlIjoxNjk1MTUzNjg0MDAwfSwic3ViIjoiNjUwYzExNTZlNGQzNDU0ZDc3ODRkM2E2IiwiaWF0IjoxNjk1MjkxMDMxLCJleHAiOjE2OTUyOTI0NzF9.axKAWfXWbzLQoLXPQ0uTgGfcq9dySQc-XoSGuIAtqF8
+
+{
+  "email": "johndoe@example.com",
+  "firstName": "John",
+  "lastName": "Doe"
+}

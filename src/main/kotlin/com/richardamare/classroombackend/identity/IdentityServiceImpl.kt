@@ -7,6 +7,7 @@ import com.richardamare.classroombackend.core.exception.UnauthorizedException
 import com.richardamare.classroombackend.identity.params.LoginParams
 import com.richardamare.classroombackend.identity.params.UserAdminCreateParams
 import com.richardamare.classroombackend.identity.params.UserOfficeCreateParams
+import com.richardamare.classroombackend.identity.params.UserTeacherCreateParams
 import com.richardamare.classroombackend.identity.result.LoginResult
 import com.richardamare.classroombackend.tenant.TenantRepository
 import org.slf4j.LoggerFactory
@@ -74,8 +75,6 @@ class IdentityServiceImpl(
     override fun createOfficeUser(params: UserOfficeCreateParams): String {
         val password = generateRandomPassword()
 
-        this.logger.info("Generated password: $password for user ${params.email}")
-
         val tenant = tenantRepository.findById(params.tenantId)
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
@@ -106,7 +105,7 @@ class IdentityServiceImpl(
                 )
             )
 
-            // TODO: send user.office.created event to send email to user with password
+            // TODO: send tenant.user.created event to send email to user with password
 
             user.id.toHexString()
         } catch (e: Exception) {
@@ -155,5 +154,47 @@ class IdentityServiceImpl(
             accessToken = token,
             expiresAt = Date(System.currentTimeMillis() + JwtUtil.expirationTime).time,
         )
+    }
+
+    override fun createTeacherUser(params: UserTeacherCreateParams): String {
+        val tenant = tenantRepository.findById(params.tenantId)
+            .orElseThrow { ResourceNotFoundException("Tenant not found") }
+
+        val existingUsers = userRepository.findAllByEmailAndRoleAndTenantId(
+            email = params.email,
+            role = UserRole.TEACHER,
+            tenantId = tenant.id,
+        )
+
+        if (existingUsers.isNotEmpty()) throw IllegalArgumentException("User already exists")
+
+        val password = generateRandomPassword()
+
+        val hashedPassword = try {
+            passwordEncoder.encode(password)
+        } catch (e: Exception) {
+            logger.error("Error hashing password", e)
+            throw IllegalStateException()
+        }
+
+        return try {
+            val user = userRepository.save(
+                User(
+                    firstName = params.firstName,
+                    lastName = params.lastName,
+                    email = params.email,
+                    password = hashedPassword,
+                    tenantId = tenant.id,
+                    role = UserRole.TEACHER,
+                )
+            )
+
+            // TODO: send tenant.user.created event to send email to user with password
+
+            user.id.toHexString()
+        } catch (e: Exception) {
+            logger.error("Error creating user", e)
+            throw IllegalStateException()
+        }
     }
 }

@@ -4,9 +4,11 @@ import com.richardamare.classroombackend.core.annotation.TenantId
 import com.richardamare.classroombackend.identity.params.LoginParams
 import com.richardamare.classroombackend.identity.params.UserAdminCreateParams
 import com.richardamare.classroombackend.identity.params.UserOfficeCreateParams
+import com.richardamare.classroombackend.identity.params.UserTeacherCreateParams
 import com.richardamare.classroombackend.identity.requests.LoginRequest
 import com.richardamare.classroombackend.identity.requests.RegisterAdminRequest
 import com.richardamare.classroombackend.identity.requests.UserOfficeCreateRequest
+import com.richardamare.classroombackend.identity.requests.UserTeacherCreateRequest
 import jakarta.validation.Valid
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.ResponseEntity
@@ -93,6 +95,23 @@ class IdentityController(
         )
 
         return ResponseEntity.ok(res)
+    }
+
+    @PostMapping("/register/teacher")
+    fun registerTeacher(
+        @RequestBody @Valid body: UserTeacherCreateRequest,
+        @TenantId tenantId: String,
+    ): ResponseEntity<*> {
+        identityService.createTeacherUser(
+            UserTeacherCreateParams(
+                firstName = body.firstName,
+                lastName = body.lastName,
+                tenantId = tenantId,
+                email = body.email,
+            )
+        )
+
+        return ResponseEntity.ok(mapOf("message" to "ok"))
     }
 
 }
