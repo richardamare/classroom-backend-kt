@@ -5,6 +5,8 @@ import com.richardamare.classroombackend.semester.params.SemesterCreateParams
 import com.richardamare.classroombackend.semester.request.SemesterCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
@@ -15,13 +17,15 @@ class SemesterController(
 ) {
 
     @PostMapping
+    @Secured("ROLE_OFFICE")
+    @PreAuthorize("hasAuthority('ROLE_OFFICE')")
     fun createSemester(
         @RequestBody @Valid body: SemesterCreateRequest,
         @TenantId tenantId: String,
     ): ResponseEntity<*> {
 
-        val startDate = ZonedDateTime.parse(body.startDate)
-        val endDate = ZonedDateTime.parse(body.endDate)
+        val startDate = ZonedDateTime.parse(body.startDate).toLocalDateTime()
+        val endDate = ZonedDateTime.parse(body.endDate).toLocalDateTime()
 
         val res = semesterService.createSemester(
             SemesterCreateParams(
