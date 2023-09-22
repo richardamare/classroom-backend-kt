@@ -7,6 +7,7 @@ import jakarta.validation.Valid
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 
 @RestController
 @RequestMapping("/api/v1/identity")
@@ -138,6 +139,15 @@ class IdentityController(
                 studentId = body.studentId,
             )
         )
+
+        return ResponseEntity.ok(res)
+    }
+
+    @GetMapping("/user/current")
+    fun getCurrentUser(
+        principal: Principal
+    ): ResponseEntity<*> {
+        val res = identityService.getUserById(principal.name)
 
         return ResponseEntity.ok(res)
     }

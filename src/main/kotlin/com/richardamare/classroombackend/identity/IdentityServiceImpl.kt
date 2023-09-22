@@ -4,6 +4,7 @@ import com.richardamare.classroombackend.auth.AuthUser
 import com.richardamare.classroombackend.auth.JwtUtil
 import com.richardamare.classroombackend.core.exception.ResourceNotFoundException
 import com.richardamare.classroombackend.core.exception.UnauthorizedException
+import com.richardamare.classroombackend.identity.dto.UserDTO
 import com.richardamare.classroombackend.identity.params.*
 import com.richardamare.classroombackend.identity.result.LoginResult
 import com.richardamare.classroombackend.identity.result.RegisterResult
@@ -116,6 +117,22 @@ class IdentityServiceImpl(
             logger.error("Error creating user", e)
             throw IllegalStateException()
         }
+    }
+
+    override fun getUserById(id: String): UserDTO? {
+        val user = userRepository.findById(ObjectId(id))
+            .orElseThrow { ResourceNotFoundException("User not found") }
+
+        return UserDTO(
+            id = user.id.toHexString(),
+            firstName = user.firstName,
+            lastName = user.lastName,
+            email = user.email,
+            role = user.role,
+            isVerified = user.isVerified,
+            studentId = user.studentId?.toHexString(),
+            tenantId = user.tenantId?.toHexString(),
+        )
     }
 
     override fun login(params: LoginParams): LoginResult {

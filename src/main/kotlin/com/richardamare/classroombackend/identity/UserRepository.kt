@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface UserRepository : MongoRepository<User, String> {
+interface UserRepository : MongoRepository<User, ObjectId> {
     fun findAllByEmailAndRoleAndTenantId(email: String, role: UserRole, tenantId: ObjectId?): List<User>
     fun findByEmailAndRoleAndTenantId(email: String, role: UserRole, tenantId: ObjectId?): Optional<User>
     fun findByIdAndTenantId(id: ObjectId, tenantId: ObjectId?): User?
