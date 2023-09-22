@@ -2,7 +2,7 @@ package com.richardamare.classroombackend.identity
 
 import com.richardamare.classroombackend.core.annotation.TenantId
 import com.richardamare.classroombackend.identity.params.*
-import com.richardamare.classroombackend.identity.requests.*
+import com.richardamare.classroombackend.identity.request.*
 import jakarta.validation.Valid
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.ResponseEntity

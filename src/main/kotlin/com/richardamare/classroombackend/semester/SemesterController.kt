@@ -2,7 +2,7 @@ package com.richardamare.classroombackend.semester
 
 import com.richardamare.classroombackend.core.annotation.TenantId
 import com.richardamare.classroombackend.semester.params.SemesterCreateParams
-import com.richardamare.classroombackend.semester.requests.SemesterCreateRequest
+import com.richardamare.classroombackend.semester.request.SemesterCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

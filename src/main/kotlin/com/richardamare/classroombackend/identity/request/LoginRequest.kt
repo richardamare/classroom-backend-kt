@@ -1,4 +1,4 @@
-package com.richardamare.classroombackend.identity.requests
+package com.richardamare.classroombackend.identity.request
 
 import jakarta.validation.constraints.Email
 import org.hibernate.validator.constraints.Length

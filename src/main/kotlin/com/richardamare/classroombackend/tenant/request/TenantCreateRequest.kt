@@ -1,4 +1,4 @@
-package com.richardamare.classroombackend.tenant.requests
+package com.richardamare.classroombackend.tenant.request
 
 import org.hibernate.validator.constraints.Length
 

@@ -1,4 +1,4 @@
-package com.richardamare.classroombackend.semester.requests
+package com.richardamare.classroombackend.semester.request
 
 import jakarta.validation.constraints.NotBlank
 

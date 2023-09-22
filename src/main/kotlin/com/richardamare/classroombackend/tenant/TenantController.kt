@@ -2,7 +2,7 @@ package com.richardamare.classroombackend.tenant
 
 import com.richardamare.classroombackend.tenant.params.TenantCreateParams
 import com.richardamare.classroombackend.tenant.params.TenantListParams
-import com.richardamare.classroombackend.tenant.requests.TenantCreateRequest
+import com.richardamare.classroombackend.tenant.request.TenantCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
