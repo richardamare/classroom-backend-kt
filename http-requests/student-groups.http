@@ -1,0 +1,10 @@
+### Create a student group
+POST {{tenantHost}}/api/v1/student-groups
+Content-Type: application/json
+Authorization: Bearer {{officeToken}}
+
+{
+  "name": "Class 1",
+  "semesterId": "650d421d23da175c6da60dda",
+  "type": "class"
+}

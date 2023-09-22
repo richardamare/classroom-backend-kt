@@ -1,0 +1,39 @@
+package com.richardamare.classroombackend.course
+
+import com.richardamare.classroombackend.core.annotation.TenantId
+import com.richardamare.classroombackend.course.params.CourseCreateParams
+import com.richardamare.classroombackend.course.request.CourseCreateRequest
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/api/v1/courses")
+class CourseController(
+    private val courseService: CourseService
+) {
+    @PostMapping
+    @Secured("ROLE_OFFICE")
+    fun createCourse(
+        @RequestBody @Valid body: CourseCreateRequest,
+        @TenantId tenantId: String
+    ): ResponseEntity<*> {
+        val res = courseService.createCourse(
+            CourseCreateParams(
+                tenantId = tenantId,
+                semesterId = body.semesterId,
+                studentGroupId = body.studentGroupId,
+                teacherId = body.teacherId,
+                name = body.name,
+                description = body.description,
+                type = CourseType.valueOf(body.type.uppercase()),
+            )
+        )
+
+        return ResponseEntity.ok(res)
+    }
+}
