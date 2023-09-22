@@ -74,7 +74,8 @@ class IdentityServiceImpl(
     }
 
     override fun createOfficeUser(params: UserOfficeCreateParams): RegisterResult {
-        val password = generateRandomPassword()
+//        val password = generateRandomPassword()
+        val password = "password" // TODO: remove this
 
         val tenant = tenantRepository.findById(params.tenantId)
             .orElseThrow { ResourceNotFoundException("Tenant not found") }

@@ -8,4 +8,5 @@ data class SemesterDTO(
     val tenantId: String,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
+    val isCurrent: Boolean
 )
