@@ -6,7 +6,6 @@ import com.richardamare.classroombackend.semester.request.SemesterCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
@@ -18,7 +17,6 @@ class SemesterController(
 
     @PostMapping
     @Secured("ROLE_OFFICE")
-    @PreAuthorize("hasAuthority('ROLE_OFFICE')")
     fun createSemester(
         @RequestBody @Valid body: SemesterCreateRequest,
         @TenantId tenantId: String,
@@ -48,6 +46,7 @@ class SemesterController(
     }
 
     @GetMapping("/{id}")
+    @Secured("ROLE_OFFICE")
     fun getSemester(
         @TenantId tenantId: String,
         @PathVariable id: String,

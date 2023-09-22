@@ -5,6 +5,7 @@ import com.richardamare.classroombackend.tenant.params.TenantListParams
 import com.richardamare.classroombackend.tenant.request.TenantCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
@@ -14,6 +15,7 @@ class TenantController(
     private val tenantService: TenantService,
 ) {
     @PostMapping
+    @Secured("ROLE_ADMIN")
     fun createTenant(
         @RequestBody @Valid body: TenantCreateRequest,
         principal: Principal,
@@ -30,6 +32,7 @@ class TenantController(
     }
 
     @GetMapping
+    @Secured("ROLE_ADMIN")
     fun listTenants(
         principal: Principal,
     ): ResponseEntity<*> {

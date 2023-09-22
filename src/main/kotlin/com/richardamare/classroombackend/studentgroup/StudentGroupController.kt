@@ -7,6 +7,7 @@ import com.richardamare.classroombackend.studentgroup.params.StudentGroupRemoveS
 import com.richardamare.classroombackend.studentgroup.request.StudentGroupCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,6 +16,7 @@ class StudentGroupController(
     private val studentGroupService: StudentGroupService,
 ) {
     @PostMapping
+    @Secured("ROLE_OFFICE")
     fun createStudentGroup(
         @RequestBody @Valid body: StudentGroupCreateRequest,
         @TenantId tenantId: String,
@@ -32,6 +34,7 @@ class StudentGroupController(
     }
 
     @PostMapping("/{id}/students/{studentId}")
+    @Secured("ROLE_OFFICE")
     fun addStudentToGroup(
         @PathVariable("id") id: String,
         @PathVariable("studentId") studentId: String,
@@ -50,6 +53,7 @@ class StudentGroupController(
     }
 
     @DeleteMapping("/{id}/students/{studentId}")
+    @Secured("ROLE_OFFICE")
     fun removeStudentFromGroup(
         @PathVariable("id") id: String,
         @PathVariable("studentId") studentId: String,
