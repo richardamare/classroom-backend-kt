@@ -1,9 +1,11 @@
 package com.richardamare.classroombackend.semester
 
 import com.richardamare.classroombackend.core.exception.ResourceNotFoundException
+import com.richardamare.classroombackend.semester.dto.SemesterDTO
 import com.richardamare.classroombackend.semester.params.SemesterCreateParams
 import com.richardamare.classroombackend.semester.result.SemesterCreateResult
 import com.richardamare.classroombackend.tenant.TenantRepository
+import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
 
 @Service
@@ -36,6 +38,31 @@ class SemesterServiceImpl(
 
         return SemesterCreateResult(
             id = semester.id.toHexString()
+        )
+    }
+
+    override fun listSemesters(tenantId: String): List<SemesterDTO> {
+        val tenant = tenantRepository.findById(tenantId)
+            .orElseThrow { ResourceNotFoundException("Tenant not found") }
+
+        return semesterRepository.findAllByTenantId(tenant.id)
+            .map(::mapSemesterToDTO)
+    }
+
+    override fun getSemester(tenantId: String, id: String): SemesterDTO {
+        val semester = semesterRepository.findByIdAndTenantId(ObjectId(id), ObjectId(tenantId))
+            ?: throw ResourceNotFoundException("Semester not found")
+
+        return mapSemesterToDTO(semester)
+    }
+
+    private fun mapSemesterToDTO(semester: Semester): SemesterDTO {
+        return SemesterDTO(
+            id = semester.id.toHexString(),
+            name = semester.name,
+            tenantId = semester.tenantId.toHexString(),
+            startDate = semester.startDate,
+            endDate = semester.endDate,
         )
     }
 }

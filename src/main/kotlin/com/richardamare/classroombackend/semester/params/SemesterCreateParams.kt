@@ -1,10 +1,10 @@
 package com.richardamare.classroombackend.semester.params
 
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 data class SemesterCreateParams(
     val name: String,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startDate: ZonedDateTime,
+    val endDate: ZonedDateTime,
     val tenantId: String,
 )

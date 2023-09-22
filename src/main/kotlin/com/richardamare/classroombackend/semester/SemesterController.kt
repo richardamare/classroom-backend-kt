@@ -5,10 +5,7 @@ import com.richardamare.classroombackend.semester.params.SemesterCreateParams
 import com.richardamare.classroombackend.semester.requests.SemesterCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
 @RestController
@@ -29,12 +26,29 @@ class SemesterController(
         val res = semesterService.createSemester(
             SemesterCreateParams(
                 name = body.name,
-                startDate = startDate.toLocalDateTime(),
-                endDate = endDate.toLocalDateTime(),
+                startDate = startDate,
+                endDate = endDate,
                 tenantId = tenantId
             )
         )
 
+        return ResponseEntity.ok(res)
+    }
+
+    @GetMapping
+    fun listSemesters(
+        @TenantId tenantId: String,
+    ): ResponseEntity<*> {
+        val res = semesterService.listSemesters(tenantId)
+        return ResponseEntity.ok(res)
+    }
+
+    @GetMapping("/{id}")
+    fun getSemester(
+        @TenantId tenantId: String,
+        @PathVariable id: String,
+    ): ResponseEntity<*> {
+        val res = semesterService.getSemester(tenantId, id)
         return ResponseEntity.ok(res)
     }
 }

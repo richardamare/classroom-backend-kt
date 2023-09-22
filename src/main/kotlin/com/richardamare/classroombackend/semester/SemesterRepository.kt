@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SemesterRepository : MongoRepository<Semester, String> {
     fun existsByNameAndTenantId(name: String, tenantId: ObjectId): Boolean
+    fun findAllByTenantId(tenantId: ObjectId): List<Semester>
+    fun findByIdAndTenantId(id: ObjectId, tenantId: ObjectId): Semester?
 }
