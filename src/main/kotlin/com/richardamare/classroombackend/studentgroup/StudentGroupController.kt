@@ -24,7 +24,7 @@ class StudentGroupController(
                 name = body.name,
                 tenantId = tenantId,
                 semesterId = body.semesterId,
-                type = StudentGroupType.valueOf(body.type),
+                type = StudentGroupType.valueOf(body.type.uppercase()),
             )
         )
 
