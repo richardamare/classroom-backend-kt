@@ -17,7 +17,7 @@ class SemesterServiceImpl(
 
     override fun createSemester(params: SemesterCreateParams): SemesterCreateResult {
 
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
         semesterRepository.existsByNameAndTenantId(params.name, tenant.id)
@@ -43,7 +43,7 @@ class SemesterServiceImpl(
     }
 
     override fun listSemesters(tenantId: String): List<SemesterDTO> {
-        val tenant = tenantRepository.findById(tenantId)
+        val tenant = tenantRepository.findById(ObjectId(tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
         val results = semesterRepository.findAllByTenantId(tenant.id)

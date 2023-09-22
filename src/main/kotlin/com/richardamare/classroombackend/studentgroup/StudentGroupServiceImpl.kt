@@ -7,6 +7,7 @@ import com.richardamare.classroombackend.studentgroup.params.StudentGroupCreateP
 import com.richardamare.classroombackend.studentgroup.params.StudentGroupRemoveStudentParams
 import com.richardamare.classroombackend.studentgroup.result.StudentGroupCreateResult
 import com.richardamare.classroombackend.tenant.TenantRepository
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -21,10 +22,10 @@ class StudentGroupServiceImpl(
     private val logger = LoggerFactory.getLogger(StudentGroupServiceImpl::class.java)
 
     override fun createStudentGroup(params: StudentGroupCreateParams): StudentGroupCreateResult {
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { IllegalArgumentException("Tenant not found") }
 
-        val semester = semesterRepository.findById(params.semesterId)
+        val semester = semesterRepository.findById(ObjectId(params.semesterId))
             .orElseThrow { IllegalArgumentException("Semester not found") }
 
         return try {
@@ -49,16 +50,16 @@ class StudentGroupServiceImpl(
 
     override fun addStudentToGroup(params: StudentGroupAddStudentParams) {
 
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { IllegalArgumentException("Tenant not found") }
 
-        val group = studentGroupRepository.findById(params.studentGroupId)
+        val group = studentGroupRepository.findById(ObjectId(params.studentGroupId))
             .orElseThrow { IllegalArgumentException("Group not found") }
 
         if (group.tenantId != tenant.id)
             throw IllegalArgumentException("Group not found")
 
-        val student = userRepository.findById(params.studentId)
+        val student = userRepository.findById(ObjectId(params.studentId))
             .orElseThrow { IllegalArgumentException("Student not found") }
 
         if (student.tenantId != tenant.id)
@@ -78,16 +79,16 @@ class StudentGroupServiceImpl(
     }
 
     override fun removeStudentFromGroup(params: StudentGroupRemoveStudentParams) {
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { IllegalArgumentException("Tenant not found") }
 
-        val group = studentGroupRepository.findById(params.studentGroupId)
+        val group = studentGroupRepository.findById(ObjectId(params.studentGroupId))
             .orElseThrow { IllegalArgumentException("Group not found") }
 
         if (group.tenantId != tenant.id)
             throw IllegalArgumentException("Group not found")
 
-        val student = userRepository.findById(params.studentId)
+        val student = userRepository.findById(ObjectId(params.studentId))
             .orElseThrow { IllegalArgumentException("Student not found") }
 
         if (student.tenantId != tenant.id)

@@ -78,7 +78,7 @@ class IdentityServiceImpl(
 //        val password = generateRandomPassword()
         val password = "password" // TODO: remove this
 
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
         val hashedPassword = try {
@@ -138,7 +138,7 @@ class IdentityServiceImpl(
     override fun login(params: LoginParams): LoginResult {
 
         val tenant = if (params.tenantId != null) {
-            tenantRepository.findById(params.tenantId)
+            tenantRepository.findById(ObjectId(params.tenantId))
                 .orElseThrow { ResourceNotFoundException("Tenant not found") }
         } else null
 
@@ -178,7 +178,7 @@ class IdentityServiceImpl(
     }
 
     override fun createTeacherUser(params: UserTeacherCreateParams): RegisterResult {
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
         val existingUsers = userRepository.findAllByEmailAndRoleAndTenantId(
@@ -222,7 +222,7 @@ class IdentityServiceImpl(
     }
 
     override fun createStudentUser(params: UserStudentCreateParams): RegisterResult {
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
         val existingUsers = userRepository.findAllByEmailAndRoleAndTenantId(
@@ -266,7 +266,7 @@ class IdentityServiceImpl(
     }
 
     override fun createParentUser(params: UserParentCreateParams): RegisterResult {
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
 
         val existingUsers = userRepository.findAllByEmailAndRoleAndTenantId(

@@ -6,6 +6,7 @@ import com.richardamare.classroombackend.identity.UserRepository
 import com.richardamare.classroombackend.semester.SemesterRepository
 import com.richardamare.classroombackend.studentgroup.StudentGroupRepository
 import com.richardamare.classroombackend.tenant.TenantRepository
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -22,16 +23,16 @@ class CourseServiceImpl(
 
     override fun createCourse(params: CourseCreateParams): CourseCreateResult {
 
-        val tenant = tenantRepository.findById(params.tenantId)
+        val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { IllegalArgumentException("Tenant not found") }
 
-        val semester = semesterRepository.findById(params.semesterId)
+        val semester = semesterRepository.findById(ObjectId(params.semesterId))
             .orElseThrow { IllegalArgumentException("Semester not found") }
 
-        val teacher = userRepository.findById(params.teacherId)
+        val teacher = userRepository.findById(ObjectId(params.teacherId))
             .orElseThrow { IllegalArgumentException("Teacher not found") }
 
-        val studentGroup = studentGroupRepository.findById(params.studentGroupId)
+        val studentGroup = studentGroupRepository.findById(ObjectId(params.studentGroupId))
             .orElseThrow { IllegalArgumentException("Student group not found") }
 
         return try {

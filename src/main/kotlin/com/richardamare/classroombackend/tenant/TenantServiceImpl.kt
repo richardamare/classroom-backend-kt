@@ -21,7 +21,7 @@ class TenantServiceImpl(
 
     override fun createTenant(params: TenantCreateParams): String {
 
-        val owner = userRepository.findById(params.ownerId).orElseThrow {
+        val owner = userRepository.findById(ObjectId(params.ownerId)).orElseThrow {
             logger.error("Error finding owner with id ${params.ownerId}")
             // ownerId is provided from the JWT token, so this should never happen
             IllegalStateException()
