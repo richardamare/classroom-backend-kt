@@ -21,7 +21,7 @@ Content-Type: application/json
 ### Create an office user
 POST http://tenant1.localhost:8080/api/v1/identity/register/office
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiI2NTA5ZjI0YzBiNDU1YjZmNWIyZTM2NWMiLCJpYXQiOjE2OTUyODkzMDAsImV4cCI6MTY5NTI5MDc0MH0.816H_lD-ZuFuxWZ_rWomF9zAtDvgGD-2CjokBm-Qxi8
+Authorization: Bearer {{adminToken}}
 
 {
   "email": "johndoe@example.com",
@@ -35,13 +35,13 @@ Content-Type: application/json
 
 {
   "email": "johndoe@example.com",
-  "password": "qjo6sFzkAD"
+  "password": "password"
 }
 
 ### Create a teacher user
 POST http://tenant1.localhost:8080/api/v1/identity/register/teacher
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoib2ZmaWNlIiwidGVuYW50SWQiOnsidGltZXN0YW1wIjoxNjk1MTUzNjg0LCJkYXRlIjoxNjk1MTUzNjg0MDAwfSwic3ViIjoiNjUwYzExNTZlNGQzNDU0ZDc3ODRkM2E2IiwiaWF0IjoxNjk1MjkxMDMxLCJleHAiOjE2OTUyOTI0NzF9.axKAWfXWbzLQoLXPQ0uTgGfcq9dySQc-XoSGuIAtqF8
+Authorization: Bearer {{officeToken}}
 
 {
   "email": "johndoe@example.com",
@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoib2ZmaWNlIiwidGVuYW50SWQiO
 ### Create a student user
 POST http://tenant1.localhost:8080/api/v1/identity/register/student
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoib2ZmaWNlIiwidGVuYW50SWQiOnsidGltZXN0YW1wIjoxNjk1MTUzNjg0LCJkYXRlIjoxNjk1MTUzNjg0MDAwfSwic3ViIjoiNjUwYzExNTZlNGQzNDU0ZDc3ODRkM2E2IiwiaWF0IjoxNjk1MjkxMDMxLCJleHAiOjE2OTUyOTI0NzF9.axKAWfXWbzLQoLXPQ0uTgGfcq9dySQc-XoSGuIAtqF8
+Authorization: Bearer {{officeToken}}
 
 {
   "email": "johndoe@example.com",
@@ -63,7 +63,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoib2ZmaWNlIiwidGVuYW50SWQiO
 ### Create a parent user
 POST http://tenant1.localhost:8080/api/v1/identity/register/parent
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoib2ZmaWNlIiwidGVuYW50SWQiOnsidGltZXN0YW1wIjoxNjk1MTUzNjg0LCJkYXRlIjoxNjk1MTUzNjg0MDAwfSwic3ViIjoiNjUwYzExNTZlNGQzNDU0ZDc3ODRkM2E2IiwiaWF0IjoxNjk1MjkxMDMxLCJleHAiOjE2OTUyOTI0NzF9.axKAWfXWbzLQoLXPQ0uTgGfcq9dySQc-XoSGuIAtqF8
+Authorization: Bearer {{officeToken}}
 
 {
   "email": "johndoe@example.com",
