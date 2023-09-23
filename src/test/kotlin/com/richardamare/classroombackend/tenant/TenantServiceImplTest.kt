@@ -1,6 +1,6 @@
 package com.richardamare.classroombackend.tenant
 
-import com.richardamare.classroombackend.core.event.Event
+import com.richardamare.classroombackend.event.Event
 import com.richardamare.classroombackend.identity.User
 import com.richardamare.classroombackend.identity.UserRepository
 import com.richardamare.classroombackend.identity.UserRole

@@ -1,6 +1,11 @@
 package com.richardamare.classroombackend.core.exception
 
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.ServletRequestBindingException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
@@ -21,17 +26,6 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
         val message: String,
         val statusCode: Int,
     )
-
-    @ExceptionHandler(ResourceNotFoundException::class)
-    fun notFoundException(e: ResourceNotFoundException, request: WebRequest): ResponseEntity<Any>? {
-        this.logger.info("resource not found exception", e)
-        return ResponseEntity.status(404).body(
-            Response(
-                message = getMessage(e, "Resource not found"),
-                statusCode = 404,
-            )
-        )
-    }
 
     @ExceptionHandler(IllegalStateException::class)
     fun illegalStateException(e: IllegalStateException, request: WebRequest): ResponseEntity<Any>? {
@@ -55,20 +49,41 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
         )
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException::class)
-//    fun methodArgumentNotValidException(e: MethodArgumentNotValidException, request: WebRequest): ResponseEntity<Any>? {
-//        val message = e.bindingResult.fieldErrors.joinToString(", ") { it.defaultMessage ?: "" }
-//        val body = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, message)
-//        return handleExceptionInternal(e, body, HttpHeaders(), body.statusCode, request)
-//    }
-
-    @ExceptionHandler(UnauthorizedException::class)
-    fun unauthorizedException(e: UnauthorizedException, request: WebRequest): ResponseEntity<Any>? {
-        this.logger.info("unauthorized exception", e)
-        return ResponseEntity.status(401).body(
+    override fun handleMethodArgumentNotValid(
+        ex: MethodArgumentNotValidException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? {
+        val errors = ex.bindingResult.fieldErrors.map { it.defaultMessage }
+        return ResponseEntity.status(400).body(
             Response(
-                message = getMessage(e, "Unauthorized"),
-                statusCode = 401,
+                message = errors.joinToString(", "),
+                statusCode = 400,
+            )
+        )
+    }
+
+    override fun handleServletRequestBindingException(
+        ex: ServletRequestBindingException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? {
+        return ResponseEntity.status(400).body(
+            Response(
+                message = getMessage(ex, "Bad request"),
+                statusCode = 400,
+            )
+        )
+    }
+
+    @ExceptionHandler(HttpException::class)
+    fun httpException(e: HttpException, request: WebRequest): ResponseEntity<Any>? {
+        return ResponseEntity.status(e.statusCode).body(
+            Response(
+                message = getMessage(e, HttpStatus.valueOf(e.statusCode).reasonPhrase),
+                statusCode = e.statusCode,
             )
         )
     }
