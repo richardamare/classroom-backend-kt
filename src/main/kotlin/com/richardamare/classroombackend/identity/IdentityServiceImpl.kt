@@ -4,6 +4,7 @@ import com.richardamare.classroombackend.auth.AuthUser
 import com.richardamare.classroombackend.auth.JwtUtil
 import com.richardamare.classroombackend.core.exception.ResourceNotFoundException
 import com.richardamare.classroombackend.core.exception.UnauthorizedException
+import com.richardamare.classroombackend.event.AppEvent
 import com.richardamare.classroombackend.identity.dto.UserDTO
 import com.richardamare.classroombackend.identity.params.*
 import com.richardamare.classroombackend.identity.result.LoginResult
@@ -11,6 +12,7 @@ import com.richardamare.classroombackend.identity.result.RegisterResult
 import com.richardamare.classroombackend.tenant.TenantRepository
 import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,6 +23,7 @@ class IdentityServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtil: JwtUtil,
     private val tenantRepository: TenantRepository,
+    private val publisher: ApplicationEventPublisher,
 ) : IdentityService {
 
     private val logger = LoggerFactory.getLogger(IdentityServiceImpl::class.java)
@@ -66,6 +69,13 @@ class IdentityServiceImpl(
                 )
             )
 
+            publisher.publishEvent(
+                AppEvent.EmailWelcome(
+                    email = user.email,
+                    name = "${user.firstName} ${user.lastName}",
+                )
+            )
+
             RegisterResult(
                 id = user.id.toHexString(),
             )
@@ -76,8 +86,7 @@ class IdentityServiceImpl(
     }
 
     override fun createOfficeUser(params: UserOfficeCreateParams): RegisterResult {
-//        val password = generateRandomPassword()
-        val password = "password" // TODO: remove this
+        val password = generateRandomPassword()
 
         val tenant = tenantRepository.findById(ObjectId(params.tenantId))
             .orElseThrow { ResourceNotFoundException("Tenant not found") }
@@ -110,6 +119,20 @@ class IdentityServiceImpl(
             )
 
             // TODO: send tenant.user.created event to send email to user with password
+
+            publisher.publishEvent(
+                AppEvent.EmailWelcome(
+                    email = user.email,
+                    name = "${user.firstName} ${user.lastName}",
+                )
+            )
+
+            publisher.publishEvent(
+                AppEvent.EmailCredentials(
+                    email = user.email,
+                    password = password,
+                )
+            )
 
             RegisterResult(
                 id = user.id.toHexString(),
@@ -211,7 +234,19 @@ class IdentityServiceImpl(
                 )
             )
 
-            // TODO: send tenant.user.created event to send email to user with password
+            publisher.publishEvent(
+                AppEvent.EmailWelcome(
+                    email = user.email,
+                    name = "${user.firstName} ${user.lastName}",
+                )
+            )
+
+            publisher.publishEvent(
+                AppEvent.EmailCredentials(
+                    email = user.email,
+                    password = password,
+                )
+            )
 
             RegisterResult(
                 id = user.id.toHexString(),
@@ -255,7 +290,19 @@ class IdentityServiceImpl(
                 )
             )
 
-            // TODO: send tenant.user.created event to send email to user with password
+            publisher.publishEvent(
+                AppEvent.EmailWelcome(
+                    email = user.email,
+                    name = "${user.firstName} ${user.lastName}",
+                )
+            )
+
+            publisher.publishEvent(
+                AppEvent.EmailCredentials(
+                    email = user.email,
+                    password = password,
+                )
+            )
 
             RegisterResult(
                 id = user.id.toHexString(),
@@ -310,7 +357,19 @@ class IdentityServiceImpl(
                 )
             )
 
-            // TODO: send tenant.user.created event to send email to user with password
+            publisher.publishEvent(
+                AppEvent.EmailWelcome(
+                    email = user.email,
+                    name = "${user.firstName} ${user.lastName}",
+                )
+            )
+
+            publisher.publishEvent(
+                AppEvent.EmailCredentials(
+                    email = user.email,
+                    password = password,
+                )
+            )
 
             RegisterResult(
                 id = user.id.toHexString(),

@@ -1,6 +1,6 @@
 package com.richardamare.classroombackend.tenant
 
-import com.richardamare.classroombackend.event.Event
+import com.richardamare.classroombackend.event.AppEvent
 import com.richardamare.classroombackend.identity.User
 import com.richardamare.classroombackend.identity.UserRepository
 import com.richardamare.classroombackend.identity.UserRole
@@ -80,7 +80,7 @@ class TenantServiceImplTest {
         verify(userRepository).findById(ObjectId(params.ownerId))
         verify(tenantRepository).findBySlug(params.slug)
         verify(tenantRepository).save(any(Tenant::class.java))
-        verify(publisher).publishEvent(any(Event.TenantCreated::class.java))
+        verify(publisher).publishEvent(any(AppEvent.TenantCreated::class.java))
     }
 
     @Test

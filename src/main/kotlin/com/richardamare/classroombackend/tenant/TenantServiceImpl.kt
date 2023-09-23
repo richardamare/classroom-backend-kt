@@ -1,6 +1,6 @@
 package com.richardamare.classroombackend.tenant
 
-import com.richardamare.classroombackend.event.Event
+import com.richardamare.classroombackend.event.AppEvent
 import com.richardamare.classroombackend.identity.UserRepository
 import com.richardamare.classroombackend.tenant.dto.TenantDTO
 import com.richardamare.classroombackend.tenant.params.TenantCreateParams
@@ -43,7 +43,7 @@ class TenantServiceImpl(
         // send event to billing service to create Stripe customer
 
         publisher.publishEvent(
-            Event.TenantCreated(
+            AppEvent.TenantCreated(
                 id = tenant.id.toHexString()
             )
         )

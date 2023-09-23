@@ -14,7 +14,19 @@ class AppEventListener {
 
     @Async
     @EventListener
-    fun tenantCreated(event: Event.TenantCreated) {
-        logger.info("received event: ${event.id}")
+    fun tenantCreated(event: AppEvent.TenantCreated) {
+        logger.info("received event ${event.eventName}")
+    }
+
+    @Async
+    @EventListener
+    fun emailCredentials(event: AppEvent.EmailCredentials) {
+        logger.info("received event ${event.eventName}")
+    }
+
+    @Async
+    @EventListener
+    fun emailWelcome(event: AppEvent.EmailWelcome) {
+        logger.info("received event ${event.eventName}")
     }
 }
