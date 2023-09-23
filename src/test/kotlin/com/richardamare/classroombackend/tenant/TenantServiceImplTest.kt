@@ -67,7 +67,7 @@ class TenantServiceImplTest {
         )
 
         // when
-        `when`(userRepository.findById(any(String::class.java)))
+        `when`(userRepository.findById(any(ObjectId::class.java)))
             .thenReturn(Optional.of(mockUser))
         `when`(tenantRepository.findBySlug(params.slug))
             .thenReturn(null)
@@ -77,7 +77,7 @@ class TenantServiceImplTest {
         underTest.createTenant(params)
 
         // then
-        verify(userRepository).findById(params.ownerId)
+        verify(userRepository).findById(ObjectId(params.ownerId))
         verify(tenantRepository).findBySlug(params.slug)
         verify(tenantRepository).save(any(Tenant::class.java))
         verify(publisher).publishEvent(any(Event.TenantCreated::class.java))
@@ -93,7 +93,7 @@ class TenantServiceImplTest {
         )
 
         // when
-        `when`(userRepository.findById(any(String::class.java)))
+        `when`(userRepository.findById(any(ObjectId::class.java)))
             .thenReturn(Optional.empty())
 
         // then
@@ -102,7 +102,7 @@ class TenantServiceImplTest {
             underTest.createTenant(params)
         }
 
-        verify(userRepository).findById(params.ownerId)
+        verify(userRepository).findById(ObjectId(params.ownerId))
     }
 
     @Test
@@ -115,7 +115,7 @@ class TenantServiceImplTest {
         )
 
         // when
-        `when`(userRepository.findById(any(String::class.java)))
+        `when`(userRepository.findById(any(ObjectId::class.java)))
             .thenReturn(Optional.of(mockUser))
         `when`(tenantRepository.findBySlug(params.slug))
             .thenReturn(mockTenant)
@@ -125,7 +125,7 @@ class TenantServiceImplTest {
             underTest.createTenant(params)
         }
 
-        verify(userRepository).findById(params.ownerId)
+        verify(userRepository).findById(ObjectId(params.ownerId))
         verify(tenantRepository).findBySlug(params.slug)
     }
 
