@@ -1,4 +1,4 @@
-package com.richardamare.classroombackend.core.event
+package com.richardamare.classroombackend.event
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration

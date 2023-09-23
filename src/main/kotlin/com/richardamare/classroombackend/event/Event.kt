@@ -1,4 +1,4 @@
-package com.richardamare.classroombackend.core.event
+package com.richardamare.classroombackend.event
 
 import org.springframework.context.ApplicationEvent
 
