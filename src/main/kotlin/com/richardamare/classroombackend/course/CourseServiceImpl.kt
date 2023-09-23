@@ -1,9 +1,13 @@
 package com.richardamare.classroombackend.course
 
+import com.richardamare.classroombackend.core.exception.ResourceNotFoundException
+import com.richardamare.classroombackend.course.dto.CourseDetailDTO
 import com.richardamare.classroombackend.course.dto.CourseListDTO
 import com.richardamare.classroombackend.course.params.CourseCreateParams
+import com.richardamare.classroombackend.course.params.CourseDetailParams
 import com.richardamare.classroombackend.course.params.CourseListParams
 import com.richardamare.classroombackend.course.result.CourseCreateResult
+import com.richardamare.classroombackend.course.result.CourseDetailResult
 import com.richardamare.classroombackend.course.result.CourseListResult
 import com.richardamare.classroombackend.identity.UserRepository
 import com.richardamare.classroombackend.identity.UserRole
@@ -251,5 +255,62 @@ class CourseServiceImpl(
             UserRole.OFFICE -> listOfficeCourses(params)
             else -> throw IllegalArgumentException("Invalid role")
         }
+    }
+
+    override fun getCourse(params: CourseDetailParams): CourseDetailResult {
+
+        val user = userRepository.findById(ObjectId(params.userId))
+            .orElseThrow {
+                // this should never happen as the user is authenticated
+                this.logger.error("A user with id ${params.userId} was not found")
+                IllegalStateException()
+            }
+
+        val course = courseRepository.findById(ObjectId(params.courseId))
+            .orElseThrow { ResourceNotFoundException("Course not found") }
+
+        val teacher = userRepository.findById(course.teacherId)
+            .orElseThrow {
+                // this should never happen
+                this.logger.error("A teacher with id ${course.teacherId} was not found")
+                IllegalStateException()
+            }
+
+        val studentGroup = studentGroupRepository.findById(course.studentGroupId)
+            .orElseThrow {
+                // this should never happen
+                this.logger.error("A student group with id ${course.studentGroupId} was not found")
+                IllegalStateException()
+            }
+
+        // only teachers and office can see the list of students enrolled in a course
+        val students = when (user.role) {
+            UserRole.TEACHER, UserRole.OFFICE -> userRepository.findAllById(studentGroup.studentIds)
+            UserRole.STUDENT, UserRole.PARENT -> listOf(user)
+            else -> throw IllegalArgumentException("Invalid role")
+        }
+
+        return CourseDetailResult(
+            course = CourseDetailDTO(
+                id = course.id.toString(),
+                name = course.name,
+                description = course.description,
+                type = course.type,
+                teacher = CourseDetailDTO.Teacher(
+                    id = teacher.id.toString(),
+                    fullName = "${teacher.firstName} ${teacher.lastName}"
+                ),
+                group = CourseDetailDTO.Group(
+                    id = studentGroup.id.toString(),
+                    name = studentGroup.name
+                ),
+                students = students.map { student ->
+                    CourseDetailDTO.Student(
+                        id = student.id.toString(),
+                        fullName = "${student.firstName} ${student.lastName}"
+                    )
+                }
+            )
+        )
     }
 }

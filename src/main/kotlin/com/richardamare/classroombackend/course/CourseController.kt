@@ -4,6 +4,7 @@ import com.richardamare.classroombackend.auth.AuthUser
 import com.richardamare.classroombackend.core.annotation.CurrentUser
 import com.richardamare.classroombackend.core.annotation.TenantId
 import com.richardamare.classroombackend.course.params.CourseCreateParams
+import com.richardamare.classroombackend.course.params.CourseDetailParams
 import com.richardamare.classroombackend.course.params.CourseListParams
 import com.richardamare.classroombackend.course.request.CourseCreateRequest
 import jakarta.validation.Valid
@@ -51,5 +52,23 @@ class CourseController(
         )
 
         return ResponseEntity.ok(res.courses)
+    }
+
+    @GetMapping("/{id}")
+    @Secured("ROLE_STUDENT", "ROLE_TEACHER", "ROLE_OFFICE", "ROLE_PARENT")
+    fun getCourse(
+        @TenantId tenantId: String,
+        @CurrentUser user: AuthUser,
+        @PathVariable id: String,
+    ): ResponseEntity<*> {
+        val res = courseService.getCourse(
+            CourseDetailParams(
+                tenantId = tenantId,
+                userId = user.id,
+                courseId = id,
+            )
+        )
+
+        return ResponseEntity.ok(res.course)
     }
 }
