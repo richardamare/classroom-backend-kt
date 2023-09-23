@@ -1,15 +1,15 @@
 package com.richardamare.classroombackend.course
 
+import com.richardamare.classroombackend.auth.AuthUser
+import com.richardamare.classroombackend.core.annotation.CurrentUser
 import com.richardamare.classroombackend.core.annotation.TenantId
 import com.richardamare.classroombackend.course.params.CourseCreateParams
+import com.richardamare.classroombackend.course.params.CourseListParams
 import com.richardamare.classroombackend.course.request.CourseCreateRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/courses")
@@ -35,5 +35,21 @@ class CourseController(
         )
 
         return ResponseEntity.ok(res)
+    }
+
+    @GetMapping
+    @Secured("ROLE_STUDENT", "ROLE_TEACHER", "ROLE_OFFICE", "ROLE_PARENT")
+    fun listCourses(
+        @TenantId tenantId: String,
+        @CurrentUser user: AuthUser,
+    ): ResponseEntity<*> {
+        val res = courseService.listCourses(
+            CourseListParams(
+                tenantId = tenantId,
+                userId = user.id,
+            )
+        )
+
+        return ResponseEntity.ok(res.courses)
     }
 }

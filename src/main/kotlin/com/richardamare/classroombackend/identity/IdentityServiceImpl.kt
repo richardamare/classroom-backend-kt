@@ -26,10 +26,11 @@ class IdentityServiceImpl(
     private val logger = LoggerFactory.getLogger(IdentityServiceImpl::class.java)
 
     private fun generateRandomPassword(len: Int = 10): String {
-        val chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        return (1..len)
-            .map { chars.random() }
-            .joinToString("")
+//        val chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+//        return (1..len)
+//            .map { chars.random() }
+//            .joinToString("")
+        return "password"
     }
 
     override fun createAdminUser(params: UserAdminCreateParams): RegisterResult {

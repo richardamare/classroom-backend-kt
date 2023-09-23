@@ -14,19 +14,17 @@ class AuthServiceImpl(
 ) : AuthService {
     override fun authorize(token: String): UsernamePasswordAuthenticationToken? {
         val username = try {
-            jwtUtil.extractUsername(token)
+            jwtUtil.extractUsername(token) ?: return null
         } catch (e: ExpiredJwtException) {
-            return null
+            throw UnauthorizedException("Token expired")
         }
-
-        username ?: return null
 
         ObjectId.isValid(username).takeIf { it } ?: return null
 
         val user = userRepository.findById(ObjectId(username))
             .orElseThrow { UnauthorizedException() }
 
-        return UsernamePasswordAuthenticationToken(user.id, null, AuthUser(user).authorities)
+        return UsernamePasswordAuthenticationToken(user.id.toHexString(), null, AuthUser(user).authorities)
     }
 
     override fun findUserById(id: String): AuthUser {

@@ -52,12 +52,6 @@ class SecurityConfig(
                     ).permitAll()
                     .anyRequest().authenticated()
             }
-//            .exceptionHandling {
-//                it.authenticationEntryPoint { request, response, authException ->
-//                    if (!request.isSecure)
-//                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
-//                }
-//            }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }

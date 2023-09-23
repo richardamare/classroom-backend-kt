@@ -1,0 +1,16 @@
+### List courses
+GET {{tenantHost}}/api/v1/courses
+Authorization: Bearer {{studentToken}}
+
+### Create a course
+POST {{tenantHost}}/api/v1/courses
+Content-Type: application/json
+
+{
+  "type": "course",
+  "name": "Course 1",
+  "description": "Course 1 description",
+  "semesterId": "1",
+  "teacherId": "1",
+  "studentGroupId": "1"
+}

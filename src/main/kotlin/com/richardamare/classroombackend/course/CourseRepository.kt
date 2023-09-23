@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CourseRepository : MongoRepository<Course, ObjectId> {
     fun findAllByTenantId(tenantId: ObjectId): List<Course>
-    fun findByIdAndTenantId(id: ObjectId, tenantId: ObjectId): Course?
 }

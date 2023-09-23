@@ -24,6 +24,7 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ResourceNotFoundException::class)
     fun notFoundException(e: ResourceNotFoundException, request: WebRequest): ResponseEntity<Any>? {
+        this.logger.info("resource not found exception", e)
         return ResponseEntity.status(404).body(
             Response(
                 message = getMessage(e, "Resource not found"),
@@ -34,6 +35,7 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(IllegalStateException::class)
     fun illegalStateException(e: IllegalStateException, request: WebRequest): ResponseEntity<Any>? {
+        this.logger.info("illegal state exception", e)
         return ResponseEntity.status(500).body(
             Response(
                 message = getMessage(e, "Internal server error"),
@@ -44,6 +46,7 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun illegalArgumentException(e: IllegalArgumentException, request: WebRequest): ResponseEntity<Any>? {
+        this.logger.info("illegal argument exception", e)
         return ResponseEntity.status(400).body(
             Response(
                 message = getMessage(e, "Bad request"),
@@ -61,6 +64,7 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(UnauthorizedException::class)
     fun unauthorizedException(e: UnauthorizedException, request: WebRequest): ResponseEntity<Any>? {
+        this.logger.info("unauthorized exception", e)
         return ResponseEntity.status(401).body(
             Response(
                 message = getMessage(e, "Unauthorized"),
@@ -71,6 +75,7 @@ class ExceptionControllerAdvice : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(Exception::class)
     fun fallbackException(e: Exception, request: WebRequest): ResponseEntity<Any>? {
+        this.logger.info("unhandled exception", e)
         return ResponseEntity.status(500).body(
             Response(
                 message = getMessage(e, "Internal server error"),
