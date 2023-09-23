@@ -127,8 +127,97 @@ class CourseServiceImpl(
         return CourseListResult(
             courses = courses.map { course ->
 
-                val teacher = userRepository.findById(course.teacherId)
-                    .orElseThrow { IllegalArgumentException("Teacher not found") }
+                val group = studentGroups.find { it.id == course.studentGroupId }
+                    ?: throw IllegalArgumentException("Student group not found")
+
+                CourseListDTO(
+                    id = course.id.toString(),
+                    name = course.name,
+                    description = course.description,
+                    type = course.type,
+                    teacher = CourseListDTO.Teacher(
+                        id = user.id.toString(),
+                        fullName = "${user.firstName} ${user.lastName}"
+                    ),
+                    group = CourseListDTO.Group(
+                        id = group.id.toString(),
+                        name = group.name
+                    )
+                )
+            }
+        )
+    }
+
+    private fun listParentCourses(params: CourseListParams): CourseListResult {
+
+        val user = userRepository.findById(ObjectId(params.userId))
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        if (user.role != UserRole.PARENT)
+            throw IllegalArgumentException("User is not a parent")
+
+        if (user.studentId == null)
+            throw IllegalStateException("User is not associated with a student")
+
+        val student = userRepository.findById(user.studentId!!)
+            .orElseThrow { IllegalArgumentException("Student not found") }
+
+        val studentGroups = studentGroupRepository.findAllByStudentIdsContaining(student.id)
+
+        val courses = courseRepository.findAllByTenantId(ObjectId(params.tenantId))
+            .filter { c -> studentGroups.any { g -> g.id == c.studentGroupId } }
+
+        if (courses.isEmpty()) return CourseListResult(courses = emptyList())
+
+        val teachers = userRepository.findAllById(
+            courses.map { it.teacherId.toHexString() }.toSet().map { ObjectId(it) }
+        )
+
+        return CourseListResult(
+            courses = courses.map { course ->
+
+                val teacher = teachers.find { it.id == course.teacherId }
+                    ?: throw IllegalArgumentException("Teacher not found")
+
+                val group = studentGroups.find { it.id == course.studentGroupId }
+                    ?: throw IllegalArgumentException("Student group not found")
+
+                CourseListDTO(
+                    id = course.id.toString(),
+                    name = course.name,
+                    description = course.description,
+                    type = course.type,
+                    teacher = CourseListDTO.Teacher(
+                        id = teacher.id.toString(),
+                        fullName = "${teacher.firstName} ${teacher.lastName}"
+                    ),
+                    group = CourseListDTO.Group(
+                        id = group.id.toString(),
+                        name = group.name
+                    )
+                )
+            }
+        )
+    }
+
+    private fun listOfficeCourses(params: CourseListParams): CourseListResult {
+        val courses = courseRepository.findAllByTenantId(ObjectId(params.tenantId))
+
+        if (courses.isEmpty()) return CourseListResult(courses = emptyList())
+
+        val teachers = userRepository.findAllById(
+            courses.map { it.teacherId.toHexString() }.toSet().map { ObjectId(it) }
+        )
+
+        val studentGroups = studentGroupRepository.findAllById(
+            courses.distinctBy { it.studentGroupId.toHexString() }.map { it.studentGroupId }
+        )
+
+        return CourseListResult(
+            courses = courses.map { course ->
+
+                val teacher = teachers.find { it.id == course.teacherId }
+                    ?: throw IllegalArgumentException("Teacher not found")
 
                 val group = studentGroups.find { it.id == course.studentGroupId }
                     ?: throw IllegalArgumentException("Student group not found")
@@ -158,6 +247,8 @@ class CourseServiceImpl(
         return when (user.role) {
             UserRole.STUDENT -> listStudentCourses(params)
             UserRole.TEACHER -> listTeacherCourses(params)
+            UserRole.PARENT -> listParentCourses(params)
+            UserRole.OFFICE -> listOfficeCourses(params)
             else -> throw IllegalArgumentException("Invalid role")
         }
     }
